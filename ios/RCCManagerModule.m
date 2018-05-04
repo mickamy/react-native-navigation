@@ -45,6 +45,12 @@ RCT_ENUM_CONVERTER(UIModalPresentationStyle,
 
 @end
 
+////////////////// HACK //////////////////
+RCCViewController *_rccViewController;
+NSString *_action;
+NSString *_animationType;
+////////////////// HACK //////////////////
+
 @implementation RCCManagerModule
 
 RCT_EXPORT_MODULE(RCCManager);

@@ -80,12 +80,10 @@ NSString const *CALLBACK_ASSOCIATED_ID = @"RCCNavigationController.CALLBACK_ASSO
     
     
     ////////////////// HACK //////////////////
-    #if true
-        [[NSNotificationCenter defaultCenter] addObserver:self
-                                                 selector:@selector(didAddReactComponent)
-                                                     name:@"DidAddReactComponent"
-                                                   object:nil];
-    #endif
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(didAddReactComponent)
+                                                 name:@"DidAddReactComponent"
+                                               object:nil];
     ////////////////// HACK //////////////////
     
     return self;
@@ -240,12 +238,17 @@ NSString const *CALLBACK_ASSOCIATED_ID = @"RCCNavigationController.CALLBACK_ASSO
             [self pushViewController:viewController animated:NO];
         } else {
             ////////////////// HACK //////////////////
-            #if false
-                dispatch_time_t time = dispatch_time ( DISPATCH_TIME_NOW , 300ull * NSEC_PER_MSEC) ;
-                dispatch_after ( time , dispatch_get_main_queue ( ) , ^ {
-                    // [self pushViewController:viewController animated:animated];
-                } ) ;
-            #endif
+            dispatch_time_t time = dispatch_time ( DISPATCH_TIME_NOW , 300ull * NSEC_PER_MSEC) ;
+            dispatch_after ( time , dispatch_get_main_queue ( ) , ^ {
+                if ([_action isEqualToString:@"push"]) {
+                    // the push action was not handled somehow
+                    if (_rccViewController == nil) {
+                        return;
+                    }
+                    [self pushViewController:_rccViewController animated:animated];
+                    _action = @"";
+                }
+            } ) ;
             _action = [performAction copy];
             ////////////////// HACK //////////////////
         }
